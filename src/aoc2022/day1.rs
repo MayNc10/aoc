@@ -1,5 +1,8 @@
+use crate::utils::*;
+
 pub fn part1(input: &str) {
-    let mut cals = input.split("\n    \n").collect::<Vec<&str>>();
+    let mut cals = split_by_big_gap(input);
+
     let cals = cals.iter_mut().map(|s| {
         let mut total = 0;
         for st in s.split_ascii_whitespace() {
@@ -11,7 +14,8 @@ pub fn part1(input: &str) {
 }
 
 pub fn part2(input: &str) {
-    let mut cals = input.split("\n    \n").collect::<Vec<&str>>();
+    let mut cals = split_by_big_gap(input);
+
     let mut cals = cals.iter_mut().map(|s| {
         let mut total = 0;
         for st in s.split_ascii_whitespace() {
@@ -26,4 +30,9 @@ pub fn part2(input: &str) {
         cals.remove(cals.iter().position(|num| num == max).unwrap());
     }
     println!("{true_tot}");
+}
+
+pub fn day1(input: &str) {
+    part1(input);
+    part2(input);
 }

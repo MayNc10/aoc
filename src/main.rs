@@ -1,3 +1,5 @@
+use aoc::*;
+
 fn main() {
-    println!("Hello, world!");
+    aoc2022::main();
 }

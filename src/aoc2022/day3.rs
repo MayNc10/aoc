@@ -1,6 +1,5 @@
 pub fn part1(input: &str) {
-    let mut total = 0;
-    for s in input.split("\n") {
+    println!("{}", input.split("\n").into_iter().map(|s| {
         let (first, second) = s.split_at(s.len() / 2);
         let mut both = 0;
         for b in first.as_bytes() {
@@ -9,18 +8,12 @@ pub fn part1(input: &str) {
                 break;
             }
         }
-        
-        if both == 0 {
-            panic!("{s}");
-        }
-
         if both >= 97 {
-            total += both - 96;
+            both - 96
         } else {
-            total += both - 38;
+            both - 38
         }
-    }
-    println!("{total}");
+    }).sum::<u32>());
 }
 
 pub fn part2(input: &str) {

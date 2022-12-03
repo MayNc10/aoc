@@ -31,4 +31,5 @@ pub mod day25;
 pub fn main() { 
     //day1::day1(fs::read_to_string("./inputs/day1.txt").unwrap().as_str());
     //day2::day2(fs::read_to_string("./inputs/day2.txt").unwrap().as_str());
+    day3::day3(fs::read_to_string("./inputs/day3.txt").unwrap().as_str());
 }

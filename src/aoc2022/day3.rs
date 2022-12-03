@@ -1,9 +1,55 @@
-pub fn part1(_input: &str) {
-    panic!("{}part1 not yet implemented!", module_path!().split("::").collect::<Vec<&str>>().last().unwrap());
+pub fn part1(input: &str) {
+    let mut total = 0;
+    for s in input.split("\n") {
+        let (first, second) = s.split_at(s.len() / 2);
+        let mut both = 0;
+        for b in first.as_bytes() {
+            if second.as_bytes().contains(b) {
+                both = *b as u32;
+                break;
+            }
+        }
+        
+        if both == 0 {
+            panic!("{s}");
+        }
+
+        if both >= 97 {
+            total += both - 96;
+        } else {
+            total += both - 38;
+        }
+    }
+    println!("{total}");
 }
 
-pub fn part2(_input: &str) {
-    panic!("{}part2 not yet implemented!", module_path!().split("::").collect::<Vec<&str>>().last().unwrap());
+pub fn part2(input: &str) {
+    let mut total = 0;
+    let mut splits = input.split("\n").collect::<Vec<&str>>();
+    while splits.len() > 0 {
+        let first = splits[0];
+        let second = splits[1];
+        let third = splits[2];
+
+        let mut both = 0;
+        for b in first.as_bytes() {
+            if second.as_bytes().contains(b) && third.as_bytes().contains(b) {
+                both = *b as u32;
+                break;
+            }
+        }
+        if both == 0 {
+            panic!("{first}\n{second}\n{third}");
+        }
+
+        if both >= 97 {
+            total += both - 96;
+        } else {
+            total += both - 38;
+        }
+        splits.remove(0); splits.remove(0); splits.remove(0);
+    }
+    println!("{total}");
 }
 
 pub fn day3(input: &str) {

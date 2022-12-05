@@ -1,21 +1,36 @@
-pub fn part1(input: &str) {
-    let num_stacks = 9;
-    let start_height = 8;
-    let indexes = [1, 5, 9, 13, 17, 21, 25, 29, 33];
+use std::str::Split;
 
+fn parse_stacks(input: &str) -> (Vec<Vec<&str>>, Split<&str>) {
+    let num_stacks = input.split("\n").next().unwrap().len() / 4 + 1;
     let mut stacks = vec![Vec::<&str>::new(); num_stacks];
-    let init = &mut input.split("\n").collect::<Vec<&str>>()[..start_height];
-    init.reverse();
 
-    for line in init {
-        for idx in indexes {
-            if !(&line[idx..idx + 1].trim().is_empty()) {
-                stacks[idx / 4].push(&line[idx..idx + 1]);
+    let mut lines = input.split("\n");
+
+    loop {
+        let line = lines.next().unwrap();
+        if line[0..1].trim().is_empty() && !line[1..2].trim().is_empty() {
+            break;
+        }
+        for idx in 0..num_stacks {
+            let real_idx = idx * 4 + 1;
+            if !(&line[real_idx..real_idx + 1].trim().is_empty()) {
+                stacks[idx].push(&line[real_idx..real_idx + 1]);
             }
         }
     }
 
-    for struc in &input.split("\n").collect::<Vec<&str>>()[start_height + 2..] {
+    lines.next(); // Skip blank line
+
+    for stack in &mut stacks {
+        stack.reverse();
+    }
+    (stacks, lines)
+}
+
+pub fn part1(input: &str) {
+    let (mut stacks, mut lines) = parse_stacks(input);
+
+    for struc in &mut lines {
         let struc = struc.replace("move", "");
         let struc = struc.replace("from", "");
         let struc = struc.replace("to", "");
@@ -40,23 +55,9 @@ pub fn part1(input: &str) {
 }
 
 pub fn part2(input: &str) {
-    let num_stacks = 9;
-    let start_height = 8;
-    let indexes = [1, 5, 9, 13, 17, 21, 25, 29, 33];
+    let (mut stacks, mut lines) = parse_stacks(input);
 
-    let mut stacks = vec![Vec::<&str>::new(); num_stacks];
-    let init = &mut input.split("\n").collect::<Vec<&str>>()[..start_height];
-    init.reverse();
-
-    for line in init {
-        for idx in indexes {
-            if !(&line[idx..idx + 1].trim().is_empty()) {
-                stacks[idx / 4].push(&line[idx..idx + 1]);
-            }
-        }
-    }
-
-    for struc in &input.split("\n").collect::<Vec<&str>>()[start_height + 2..] {
+    for struc in &mut lines {
         let struc = struc.replace("move", "");
         let struc = struc.replace("from", "");
         let struc = struc.replace("to", "");
@@ -69,7 +70,6 @@ pub fn part2(input: &str) {
 
         for num in 0..count {
             let item = stacks[src][stacks[src].len() - (count - num)];
-
             stacks[dest].push(item);
         }
         for _ in 0..count {

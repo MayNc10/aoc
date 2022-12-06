@@ -1,55 +1,53 @@
 pub fn part1(input: &str) {
-    for idx in 0..input.len() - 4 {
-        let four = &input[idx..idx + 4];
-        let mut stop = true;
-        for idx2 in 0..4 {
-            let c = &four[idx2..idx2 + 1];
-            for idx3 in 0..4 {
-                if idx3 == idx2 {
-                    continue;
-                }
+    let span_len = 4;
+    
+    let mut idx = 0;
+    let mut len = 1; 
+    while len < span_len + 1 {
+        let s = &input[idx..idx + len];
+        let newc = &input[idx + len..idx + len + 1];
 
-                if &four[idx3..idx3 + 1] == c {
-                    stop = false;
-                    break;
-                }
-            }
-            if !stop {
-                break;
-            }
+        let mut s_idx = 0;
+        while (s_idx < s.len()) && &s[s_idx..s_idx + 1] != newc  {
+            s_idx += 1;
         }
-        if stop {
-            println!("{}", idx + 4);
-            return;
+        if s_idx == s.len() {
+            len += 1;
+            if s_idx + 1 == span_len {
+                println!("{}", idx + len);
+                return;
+            }
+            continue;
         }
-    }
+        idx += s_idx + 1;
+        len -= s_idx;
+    } 
 }
 
 pub fn part2(input: &str) {
-    for idx in 0..input.len() - 14 {
-        let four = &input[idx..idx + 14];
-        let mut stop = true;
-        for idx2 in 0..14 {
-            let c = &four[idx2..idx2 + 1];
-            for idx3 in 0..14 {
-                if idx3 == idx2 {
-                    continue;
-                }
+    let span_len = 14;
+    
+    let mut idx = 0;
+    let mut len = 1; 
+    while len < span_len + 1 {
+        let s = &input[idx..idx + len];
+        let newc = &input[idx + len..idx + len + 1];
 
-                if &four[idx3..idx3 + 1] == c {
-                    stop = false;
-                    break;
-                }
-            }
-            if !stop {
-                break;
-            }
+        let mut s_idx = 0;
+        while (s_idx < s.len()) && &s[s_idx..s_idx + 1] != newc  {
+            s_idx += 1;
         }
-        if stop {
-            println!("{}", idx + 14);
-            return;
+        if s_idx == s.len() {
+            len += 1;
+            if s_idx + 1 == span_len {
+                println!("{}", idx + len);
+                return;
+            }
+            continue;
         }
-    }
+        idx += s_idx + 1;
+        len -= s_idx;
+    } 
 }
 
 pub fn day6(input: &str) {

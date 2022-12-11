@@ -38,5 +38,6 @@ pub fn main() {
     // day7::day7(fs::read_to_string("./inputs/day7.txt").unwrap().as_str());
     // day8::day8(fs::read_to_string("./inputs/day8.txt").unwrap().as_str());
     // day9::day9(fs::read_to_string("./inputs/day9.txt").unwrap().as_str());
-    day10::day10(fs::read_to_string("./inputs/day10.txt").unwrap().as_str());
+    // day10::day10(fs::read_to_string("./inputs/day10.txt").unwrap().as_str());
+    day11::day11(fs::read_to_string("./inputs/day11.txt").unwrap().as_str());
 }

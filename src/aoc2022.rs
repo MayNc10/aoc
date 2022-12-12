@@ -29,15 +29,15 @@ pub mod day25;
 
 
 pub fn main() { 
-    // day1::day1(fs::read_to_string("./inputs/day1.txt").unwrap().as_str());
-    // day2::day2(fs::read_to_string("./inputs/day2.txt").unwrap().as_str());
-    // day3::day3(fs::read_to_string("./inputs/day3.txt").unwrap().as_str());
-    // day4::day4(fs::read_to_string("./inputs/day4.txt").unwrap().as_str());
-    // day5::day5(fs::read_to_string("./inputs/day5.txt").unwrap().as_str());
-    // day6::day6(fs::read_to_string("./inputs/day6.txt").unwrap().as_str());
-    // day7::day7(fs::read_to_string("./inputs/day7.txt").unwrap().as_str());
-    // day8::day8(fs::read_to_string("./inputs/day8.txt").unwrap().as_str());
-    // day9::day9(fs::read_to_string("./inputs/day9.txt").unwrap().as_str());
-    // day10::day10(fs::read_to_string("./inputs/day10.txt").unwrap().as_str());
-    day11::day11(fs::read_to_string("./inputs/day11.txt").unwrap().as_str());
+    // day1::day1(fs::read_to_string("./inputs/2022/day1.txt").unwrap().as_str());
+    // day2::day2(fs::read_to_string("./inputs/2022/day2.txt").unwrap().as_str());
+    // day3::day3(fs::read_to_string("./inputs/2022/day3.txt").unwrap().as_str());
+    // day4::day4(fs::read_to_string("./inputs/2022/day4.txt").unwrap().as_str());
+    // day5::day5(fs::read_to_string("./inputs/2022/day5.txt").unwrap().as_str());
+    // day6::day6(fs::read_to_string("./inputs/2022/day6.txt").unwrap().as_str());
+    // day7::day7(fs::read_to_string("./inputs/2022/day7.txt").unwrap().as_str());
+    // day8::day8(fs::read_to_string("./inputs/2022/day8.txt").unwrap().as_str());
+    // day9::day9(fs::read_to_string("./inputs/2022/day9.txt").unwrap().as_str());
+    // day10::day10(fs::read_to_string("./inputs/2022/day10.txt").unwrap().as_str());
+    // day11::day11(fs::read_to_string("./inputs/2022/day11.txt").unwrap().as_str());
 }

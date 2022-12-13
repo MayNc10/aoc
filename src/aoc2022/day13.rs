@@ -94,54 +94,6 @@ fn compare_values(val1: &Value, val2: &Value) -> Option<bool> {
     }
 }
 
-fn try_order(front_val: &Value, rest: &Vec<Value>) -> Option<Vec<Value>> {
-    for val_idx in 0..rest.len() {
-        if compare_values(front_val, &rest[val_idx]).unwrap() {
-            let mut new_rest = (*rest).clone();
-            let new_front = new_rest.remove(val_idx);
-            if let Some(mut rest) = try_order(&new_front, &new_rest) {
-                let mut new_vec = vec![front_val.clone()];
-                new_vec.append(&mut rest);
-                return Some(new_vec)
-            } 
-        }
-    }
-    None
-}
-
-fn flatten(values: &[Value]) -> Option<u8> {
-    if values.len() == 0 {
-        None
-    }
-    else {
-        match &values[0] {
-            Value::Integer(i) => Some(*i),
-            Value::List(v) => flatten(v)
-        }
-    }
-}
-
-fn flat_compare(first: &[Value], second: &[Value]) -> Option<bool> {
-    assert_ne!(first.len(), 0);
-    assert_ne!(second.len(), 0);
-    
-    let first_val = flatten(first);
-    let second_val = flatten(second);
-
-    if first_val == second_val {
-        None
-    } 
-    else if first_val.is_none() {
-        Some(false)
-    } 
-    else if second_val.is_none() {
-        Some(true)
-    } 
-    else {
-        Some(first_val.unwrap() < second_val.unwrap())
-    }
-}
-
 impl PartialOrd for Value {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(other))
@@ -180,18 +132,17 @@ impl Ord for Value {
                     l2 = &l2[1..l2.len()];
                 }
                 if l2.len() > 0 {
-                    return std::cmp::Ordering::Less;
+                    std::cmp::Ordering::Less
                 } 
                 else if l1.len() > 0 {
-                    return std::cmp::Ordering::Greater;
+                    std::cmp::Ordering::Greater
+                }
+                else {
+                    std::cmp::Ordering::Equal
                 }
             },
             _ => unreachable!()
         }
-        //println!("{:?}", this);
-        //println!("{:?}", other);
-        //unreachable!()
-        std::cmp::Ordering::Equal
     }
 }
 

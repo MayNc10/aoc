@@ -55,45 +55,6 @@ fn parse_list(mut line: &str) -> Vec<Value> {
     vals
 }
 
-fn compare_values(val1: &Value, val2: &Value) -> Option<bool> {
-    //println!("Comparing {:?}, {:?}", val1, val2);
-    match (val1, val2) {
-        (Value::Integer(i1), Value::Integer(i2)) => {
-            if i1 < i2 {
-                Some(true)
-            }
-            else if i1 > i2 {
-                Some(false)
-            }
-            else  {
-                None
-            }
-        },
-        (Value::List(l1), Value::List(l2)) => {
-            for idx in 0..l1.len() {
-                if l2.len() <= idx {
-                    break;
-                }
-                if let Some(res) = compare_values(&l1[idx], &l2[idx]) {
-                    return Some(res);
-                }
-            }
-            if l1.len() != l2.len() {
-                Some(l1.len() < l2.len())
-            } 
-            else {
-                None
-            }   
-        }
-        (Value::List(_), Value::Integer(i)) => {
-            compare_values(val1, &Value::List(vec![Value::Integer(*i)]))
-        }
-        (Value::Integer(i), Value::List(_)) => {
-            compare_values(&Value::List(vec![Value::Integer(*i)]), val2)
-        }
-    }
-}
-
 impl PartialOrd for Value {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         Some(self.cmp(other))
@@ -102,46 +63,44 @@ impl PartialOrd for Value {
 
 impl Ord for Value {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        let mut this = self.clone();
-        let mut other = other.clone();
-        if matches!(this, Value::Integer(_)) {
-            this = Value::List(vec![this.clone()]);
-        }
-        if matches!(other, Value::Integer(_)) {
-            other = Value::List(vec![other.clone()]);
-        }
-        match (&this, &other) {
-            (Value::List(l1), Value::List(l2)) => {
-                let mut l1 = l1.as_slice();
-                let mut l2 = l2.as_slice();
-                while l1.len() > 0 && l2.len() > 0 {
-                    let cmp = if matches!(l1[0], Value::List(_)) || matches!(l2[0], Value::List(_)) 
-                    {
-                        l1[0].cmp(&l2[0])
-                    }
-                    else if let Value::Integer(i1) = l1[0] && let Value::Integer(i2) = l2[0] {
-                        i1.cmp(&i2)
-                    }
-                    else {
-                        unreachable!();
-                    };
-                    if cmp != std::cmp::Ordering::Equal {
-                        return cmp;
-                    }
-                    l1 = &l1[1..l1.len()];
-                    l2 = &l2[1..l2.len()];
-                }
-                if l2.len() > 0 {
+        match (self, other) {
+            (Value::Integer(i1), Value::Integer(i2)) => {
+                if i1 < i2 {
                     std::cmp::Ordering::Less
-                } 
-                else if l1.len() > 0 {
+                }
+                else if i1 > i2 {
                     std::cmp::Ordering::Greater
                 }
-                else {
+                else  {
                     std::cmp::Ordering::Equal
                 }
             },
-            _ => unreachable!()
+            (Value::List(l1), Value::List(l2)) => {
+                for idx in 0..l1.len() {
+                    if l2.len() <= idx {
+                        break;
+                    }
+                    if l1[idx].cmp(&l2[idx]) != std::cmp::Ordering::Equal {
+                        return l1[idx].cmp(&l2[idx]);
+                    }
+                }
+                if l1.len() != l2.len() {
+                    if l1.len() < l2.len() {
+                        std::cmp::Ordering::Less
+                    } else {
+                        std::cmp::Ordering::Greater
+                    }
+                } 
+                else {
+                    std::cmp::Ordering::Equal
+                }   
+            }
+            (Value::List(_), Value::Integer(i)) => {
+                self.cmp(&Value::List(vec![Value::Integer(*i)]))
+            }
+            (Value::Integer(i), Value::List(_)) => {
+                Value::List(vec![Value::Integer(*i)]).cmp(other)
+            }
         }
     }
 }
@@ -157,20 +116,8 @@ pub fn part1(input: &str) {
     let mut sum = 0;
     for idx in 0..packets.len() {
         let (pack1, pack2) = &packets[idx];
-        if let Some(res) = compare_values(&pack1, &pack2) {
-            //println!("Pair {} is correct? {}", idx + 1, res);
-            //println!("p1: {:?}", pack1);
-            //println!("p2: {:?}", pack2);
-
-            if res {
-                sum += idx + 1;
-            }
-        }
-        else {
-            println!("Two packets as lists were equal!");
-            println!("p1: {:?}", pack1);
-            println!("p2: {:?}", pack2);
-            panic!();
+        if pack1 < pack2 {
+            sum += idx + 1
         }
     }
     println!("{}", sum);

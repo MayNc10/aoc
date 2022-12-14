@@ -657,18 +657,80 @@ defmodule Aoc2015 do
     end
 
     def part2(s) do
-      import Jason
       {_, result} = Jason.decode(s)
       sum_result(result)
     end
 
     def run() do
       file_string = File.read!("/home/may/coding/aoc/inputs/2015/day12.txt")
-      #file_strings = String.codepoints(file_string)
 
       IO.puts(part1(file_string))
-      #IO.puts(part2(file_strings))
       IO.puts(part2(file_string))
+    end
+  end
+  defmodule Day13 do
+    @moduledoc """
+    This module solves both parts of the day 13 problem from AoC 2015
+    """
+    # Just ripped this code from elixir forums
+    def permutations([]), do: [[]]
+    def permutations(list), do: for elem <- list, rest <- permutations(list--[elem]), do: [elem|rest]
+
+    defp create_happiness_map(s, map, list) when s == [], do: {map, list}
+    defp create_happiness_map(s, map, list) do
+      line = hd(s)
+      line = String.slice(line, 0..-2)
+      [combined, adjacent] = String.split(line, " happiness units by sitting next to ")
+      [subject, amount] = String.split(combined, " would ")
+      direction = String.slice(amount, 0..3)
+      amount = String.slice(amount, 5..-1)
+      # Parse amount
+      scalar = if(direction == "gain", do: 1, else: -1)
+      amount = String.to_integer(amount) * scalar
+      create_happiness_map(tl(s), Map.put_new(map, {subject, adjacent}, amount), [subject | list])
+    end
+    defp create_happiness_map(s), do: create_happiness_map(s, Map.new(), [])
+
+    defp score_perm(perm, map) do
+      import CLL
+      len = length(perm)
+      perm = perm |> CLL.init()
+      Enum.reduce(0..len - 1, 0, fn iter, acc ->
+        perm = perm |> CLL.next(iter)
+        current = perm |> CLL.value()
+        prev = perm |> CLL.prev(1) |> CLL.value()
+        next = perm |> CLL.next(1) |> CLL.value()
+        acc + map[{current, prev}] + map[{current, next}]
+      end)
+    end
+
+    def part1(s) do
+      {map, names} = create_happiness_map(s)
+      names = Enum.uniq(names)
+      all_possible = permutations(names)
+      all_possible_scores = Enum.map(all_possible, fn perm -> score_perm(perm, map) end)
+      Enum.max(all_possible_scores)
+    end
+
+    def part2(s) do
+      {map, names} = create_happiness_map(s)
+      names = Enum.uniq(names)
+      # Add ourself to names
+      map = Enum.reduce(names, map, fn name, map ->
+        map |> Map.put_new({"me", name}, 0) |> Map.put_new({name, "me"}, 0)
+      end)
+      names = ["me" | names]
+      all_possible = permutations(names)
+      all_possible_scores = Enum.map(all_possible, fn perm -> score_perm(perm, map) end)
+      Enum.max(all_possible_scores)
+    end
+
+    def run() do
+      file_string = File.read!("/home/may/coding/aoc/inputs/2015/day13.txt")
+      file_strings = String.split(file_string, "\n")
+
+      IO.puts(part1(file_strings))
+      IO.puts(part2(file_strings))
     end
   end
   def main([]) do
@@ -683,6 +745,7 @@ defmodule Aoc2015 do
     #Day9.run()
     #Day10.run()
     #Day11.run()
-    Day12.run()
+    #Day12.run()
+    Day13.run()
   end
 end

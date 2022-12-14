@@ -19,6 +19,7 @@ defmodule Aoc.MixProject do
     [
       {:jason, "~> 1.4"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
+      {:cll, "~> 0.1.1"}
     ]
   end
 end

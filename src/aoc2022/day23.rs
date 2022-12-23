@@ -248,13 +248,8 @@ pub fn part2(input: &str) {
     let (mut map, mut elves, mut max_row, mut max_col) = read_map(input);
     let mut min_row = 0; let mut min_col = 0;
         
-    //print_map(&mut map, (min_row, min_col), (max_row, max_col));
-    //println!();
-
     let mut count = 1;
     loop {
-        //print_map(&mut map, (min_row, min_col), (max_row, max_col));
-        //println!();
 
         assert!(map_is_correct(&map, &elves));
 
@@ -281,10 +276,7 @@ pub fn part2(input: &str) {
                     duplicates.insert(pos);
                 }
             }
-            //println!("{:?} {:?}", elf.pos, elf.choice);
         }
-        //println!("{:?}", positions_chosen);
-        //println!("{:?}", duplicates);
 
         if all_none ||
         elves.iter_mut()
@@ -299,7 +291,6 @@ pub fn part2(input: &str) {
             .filter(|elf| elf.choice.is_some() && !duplicates.contains(&elf.choice.unwrap())) 
         {
             let new_pos = elf.choice.unwrap();
-            //println!("{:?} -> {:?}", elf.pos, new_pos);
             map.insert(elf.pos, false);
             map.insert(new_pos, true);
             elf.pos = new_pos;
@@ -314,7 +305,6 @@ pub fn part2(input: &str) {
         new_directions.append(&mut directions);
         directions = new_directions;
     }
-    //print_map(&mut map, (min_row, min_col), (max_row, max_col));
 
 }
 

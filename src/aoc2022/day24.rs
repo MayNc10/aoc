@@ -131,8 +131,6 @@ fn search_bfs(blizzards: Vec<Blizzard>, max_row: usize, max_col: usize) -> usize
     .collect::<Vec<_>>();
     let mut possible = vec![START_POS];
     loop {
-        println!("{}", minute);
-        //print_valley(&next, max_row, max_col);
         let mut new_possibilities = possible.clone();
 
         for pos in possible {
@@ -190,8 +188,6 @@ fn search_bfs_pt2(blizzards: Vec<Blizzard>, max_row: usize, max_col: usize) -> u
     .collect::<Vec<_>>();
     let mut possible = vec![START_POS];
     'first: loop {
-        println!("{}", minute);
-        //print_valley(&next, max_row, max_col);
         let mut new_possibilities = possible.clone();
 
         for pos in possible {
@@ -247,8 +243,6 @@ fn search_bfs_pt2(blizzards: Vec<Blizzard>, max_row: usize, max_col: usize) -> u
     let mut possible = vec![(max_row, max_col - 1)];
     // Now go back
     'second: loop {
-        println!("{}", minute);
-        //print_valley(&next, max_row, max_col);
         let mut new_possibilities = possible.clone();
 
         for pos in possible {
@@ -304,8 +298,6 @@ fn search_bfs_pt2(blizzards: Vec<Blizzard>, max_row: usize, max_col: usize) -> u
     }
     let mut possible = vec![START_POS];
     loop {
-        println!("{}", minute);
-        //print_valley(&next, max_row, max_col);
         let mut new_possibilities = possible.clone();
 
         for pos in possible {

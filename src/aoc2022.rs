@@ -52,5 +52,6 @@ pub fn main() {
     // day21::day21(fs::read_to_string("./inputs/2022/day21.txt").unwrap().as_str());
     // day22::day22(fs::read_to_string("./inputs/2022/day22.txt").unwrap().as_str());
     // day23::day23(fs::read_to_string("./inputs/2022/day23.txt").unwrap().as_str());
-    day24::day24(fs::read_to_string("./inputs/2022/day24.txt").unwrap().as_str());
+    // day24::day24(fs::read_to_string("./inputs/2022/day24.txt").unwrap().as_str());
+    day25::day25(fs::read_to_string("./inputs/2022/day25.txt").unwrap().as_str());
 }

@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 fn parse_lines(input: &str) -> Vec<String> {
     let mut v = Vec::new();
     let mut s = String::new();
@@ -144,6 +146,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day13(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 13 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 13 part 2 in {:?}", after_p2.duration_since(now));
 }

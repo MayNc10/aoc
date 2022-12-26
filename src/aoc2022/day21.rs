@@ -1,4 +1,4 @@
-use std::{collections::HashMap, hash::Hash, rc::Rc};
+use std::{collections::HashMap, rc::Rc, time::Instant};
 
 struct Action<'a> {
     lhs: &'a str,
@@ -33,7 +33,7 @@ fn is_associative(op: fn(i64, i64) -> i64) -> bool {
     else { panic!() }
 }
 
-fn print_op(op: fn(i64, i64) -> i64) -> &'static str {
+fn _print_op(op: fn(i64, i64) -> i64) -> &'static str {
     if op == add {
         "+"
     }
@@ -336,6 +336,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day21(input: &str) {
-    //part1(input);
+    let now = Instant::now();
+    part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 21 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 21 part 2 in {:?}", after_p2.duration_since(now));
 }

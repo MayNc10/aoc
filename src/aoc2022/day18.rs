@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::time::Instant;
 
 use petgraph::Graph;
 use petgraph::algo::astar;
@@ -168,6 +169,12 @@ pub fn part2(input: &str) {
     println!("{}", uncovered_sides) 
 }
 pub fn day18(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 18 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 18 part 2 in {:?}", after_p2.duration_since(now));
 }

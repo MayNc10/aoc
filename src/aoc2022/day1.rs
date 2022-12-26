@@ -1,4 +1,5 @@
 use crate::utils::*;
+use std::time::Instant;
 
 pub fn part1(input: &str) {
     let mut cals = split_by_big_gap(input);
@@ -33,6 +34,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day1(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 1 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 1 part 2 in {:?}", after_p2.duration_since(now));
 }

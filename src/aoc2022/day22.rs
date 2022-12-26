@@ -1,4 +1,4 @@
-use std::ops::{Index, IndexMut};
+use std::{ops::{Index, IndexMut}, time::Instant};
 
 #[derive(Debug, Clone)]
 struct Row {
@@ -147,16 +147,6 @@ fn debug_movement(pos: (usize, usize), map: &mut Vec<Row>, move_idx: usize) {
     };
     
     map[pos.0][pos.1] = new_c;
-
-    if SHOULD_DEBUG_PRINT {
-        for row in map {
-            for _ in 0..row.begin { print!(" "); }
-            for c in &row.row { print!("{}", c) }
-            println!();
-        }
-        println!();
-    }
-    
 }
 
 #[derive(PartialEq, Eq, Clone, Copy)]
@@ -336,64 +326,8 @@ pub fn part1(input: &str) {
 
 }
 
-// Example layout
-/* 
-static CHUNK_SIZE: usize = 4;
-
-static EDGE_A: Edge = Edge {
-    span1: ((7, 4), (7, 7)),
-    span2: ((8, 8), (11, 8)),
-    span1_exit_direction: UP,
-    span2_exit_direction: RIGHT,
-    ty: ConnectionType::Reversed,
-};
-static EDGE_B: Edge = Edge {
-    span1: ((7, 0), (7, 3)),
-    span2: ((11, 8), (11, 11)),
-    span1_exit_direction: UP,
-    span2_exit_direction: UP,
-    ty: ConnectionType::Reversed,
-};
-static EDGE_C: Edge = Edge {
-    span1: ((4, 11), (7, 11)),
-    span2: ((8, 12), (8, 15)),
-    span1_exit_direction: LEFT,
-    span2_exit_direction: DOWN,
-    ty: ConnectionType::Reversed,
-};
-static EDGE_D: Edge = Edge {
-    span1: ((0, 11), (3, 11)),
-    span2: ((8, 15), (11, 15)),
-    span1_exit_direction: LEFT,
-    span2_exit_direction: LEFT,
-    ty: ConnectionType::Reversed,
-};
-static EDGE_E: Edge = Edge {
-    span1: ((4, 0), (7, 0)),
-    span2: ((11, 12), (11, 15)),
-    span1_exit_direction: RIGHT,
-    span2_exit_direction: UP,
-    ty: ConnectionType::Reversed,
-};
-static EDGE_F: Edge = Edge {
-    span1: ((4, 4), (4, 7)),
-    span2: ((0, 8), (3, 8)),
-    span1_exit_direction: DOWN,
-    span2_exit_direction: RIGHT,
-    ty: ConnectionType::Straight,
-};
-static EDGE_G: Edge = Edge {
-    span1: ((4, 0), (4, 3)),
-    span2: ((0, 8), (0, 11)),
-    span1_exit_direction: DOWN,
-    span2_exit_direction: DOWN,
-    ty: ConnectionType::Reversed,
-};
-*/
-
 // True layout
 static CHUNK_SIZE: usize = 50;
-
 
 static EDGE_A: Edge = Edge {
     span1: ((CHUNK_SIZE * 3 - 1, CHUNK_SIZE), (CHUNK_SIZE * 3 - 1, CHUNK_SIZE * 2 - 1)),
@@ -446,8 +380,6 @@ static EDGE_G: Edge = Edge {
 };
 
 
-const SHOULD_DEBUG_PRINT: bool = false;
-
 pub fn part2(input: &str) {
     let edges = vec![EDGE_A, EDGE_B, EDGE_C, EDGE_D, EDGE_E, EDGE_F, EDGE_G];
 
@@ -485,7 +417,7 @@ pub fn part2(input: &str) {
                 move_idx %= FACING_OFFSETS.len();
             },
             Move::Straight(amount) => {
-                for count in 0..*amount {
+                for _count in 0..*amount {
                     debug_movement(position, &mut movement_map, move_idx);
                     path.push((position, move_idx));
 
@@ -516,44 +448,19 @@ pub fn part2(input: &str) {
 
     
     movement_map[position.0][position.1] = '*';
-    //for row in &movement_map {
-    //    for _ in 0..row.begin { print!(" "); }
-    //    for c in &row.row { print!("{}", c) }
-    //    println!();
-    //}
-    //println!();
 
     let pwd = 1000 * (position.0 + 1) + 4 * (position.1 + 1) + move_idx;
     println!("{}", pwd);
 
-    //let mut last_movement = &path[0].1;
-    //for (pos, idx) in &path {
-    //    debug_movement(*pos, &mut movement_map, *idx);
-    //
-    //    if idx != last_movement {
-    //        for row in &movement_map {
-    //            for _ in 0..row.begin { print!(" "); }
-    //            for c in &row.row { print!("{}", c) }
-    //            println!();
-    //        }
-    //        println!();
-    //        let mut line = String::new();
-    //        std::io::stdin().read_line(&mut line).unwrap();
-    //    }
-    //    last_movement = idx;
-    //}
-
-    //movement_map[position.0][position.1] = '*';
-    //for row in &movement_map {
-    //    for _ in 0..row.begin { print!(" "); }
-    //    for c in &row.row { print!("{}", c) }
-    //    println!();
-    //}
-    //println!();
-
 }
 
 pub fn day22(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 22 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 22 part 2 in {:?}", after_p2.duration_since(now));
 }

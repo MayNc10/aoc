@@ -1,5 +1,5 @@
 // ty StackOverflow!
-use std::char::from_digit;
+use std::{char::from_digit, time::Instant};
 fn encode(mut n: u128, r: u128) -> Option<String> {
    let mut s = String::new();
    loop {
@@ -84,13 +84,12 @@ pub fn part1(input: &str) {
     for line in input.split("\n") {
         num += snafu_to_decimal(line);
     }
-    //let test_nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 2022, 12345, 314159265];
-    //for num in test_nums {
-    //    println!("{} {}", num, decimal_to_snafu(num));
-    //}
     println!("{}", decimal_to_snafu(num));
 }
 
 pub fn day25(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 25 part 1 in {:?}", after_p1.duration_since(now));
 }

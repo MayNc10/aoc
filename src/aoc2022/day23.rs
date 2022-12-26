@@ -1,4 +1,4 @@
-use std::{collections::{HashMap, HashSet}};
+use std::{collections::{HashMap, HashSet}, time::Instant};
 
 // Row, col
 type Position = (isize, isize);
@@ -87,7 +87,7 @@ fn read_map(input: &str) -> (HashMap<Position, bool>, Vec<Elf>, isize, isize) {
     (map, elves, row, max_col)
 }
 
-fn print_map(map: &mut HashMap<Position, bool>, min: Position, max: Position) {
+fn _print_map(map: &mut HashMap<Position, bool>, min: Position, max: Position) {
     for row in min.0..max.0 {
         for col in min.1..max.1 {
             if !map.contains_key(&(row, col)) {
@@ -309,6 +309,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day23(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 23 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 23 part 2 in {:?}", after_p2.duration_since(now));
 }

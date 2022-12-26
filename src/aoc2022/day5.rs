@@ -1,4 +1,4 @@
-use std::str::Split;
+use std::{str::Split, time::Instant};
 
 fn parse_stacks(input: &str) -> (Vec<Vec<&str>>, Split<&str>) {
     let num_stacks = input.split("\n").next().unwrap().len() / 4 + 1;
@@ -84,6 +84,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day5(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 5 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 5 part 2 in {:?}", after_p2.duration_since(now));
 }

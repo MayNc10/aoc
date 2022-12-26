@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use pathfinding::prelude::astar;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -97,6 +99,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day12(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 12 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 12 part 2 in {:?}", after_p2.duration_since(now));
 }

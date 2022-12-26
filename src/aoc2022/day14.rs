@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 #[derive(PartialEq, Eq)]
 enum FallResult {
     Moved,
@@ -39,7 +41,7 @@ fn sim_sand_fall(map: &mut Vec<Vec<char>>, sand_idxs: (usize, usize)) -> (FallRe
     if map[new_row].len() <= col + 2 {
         return (FallResult::FellIntoVoid, None);
     } 
-    else if (map[new_row][col + 2] == '#' || map[new_row][col + 2] == 'O') {
+    else if map[new_row][col + 2] == '#' || map[new_row][col + 2] == 'O' {
         if new_row != 0 && map[new_row - 1].len() <= col + 2 {
             return (FallResult::FellIntoVoid, None);
         }
@@ -136,7 +138,7 @@ fn max_map_depth(map: &Vec<Vec<char>>) -> usize {
     max
 }
 
-fn print_map(map: &Vec<Vec<char>>) {
+fn _print_map(map: &Vec<Vec<char>>) {
     for col_idx in 0..max_map_depth(map) {
         for row in map {
             // Check should skip
@@ -224,6 +226,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day14(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 14 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 14 part 2 in {:?}", after_p2.duration_since(now));
 }

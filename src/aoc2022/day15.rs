@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 const COLUMN_AT: isize = 2000000;
 
 #[repr(u8)]
@@ -189,6 +191,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day15(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 15 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 15 part 2 in {:?}", after_p2.duration_since(now));
 }

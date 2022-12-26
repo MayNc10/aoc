@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 struct Monkey {
     pub items: Vec<u128>,
     pub change: Box<dyn Fn(&mut u128)>,
@@ -138,6 +140,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day11(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 11 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 11 part 2 in {:?}", after_p2.duration_since(now));
 }

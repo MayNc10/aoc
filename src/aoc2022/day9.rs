@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, time::Instant};
 
 fn adjust(head_pos: &mut (i32, i32), tail_pos: &mut(i32, i32)) {
     if (head_pos.0).abs_diff(tail_pos.0) < 2 && (head_pos.1).abs_diff(tail_pos.1) < 2 { return; }
@@ -64,6 +64,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day9(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 9 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 9 part 2 in {:?}", after_p2.duration_since(now));
 }

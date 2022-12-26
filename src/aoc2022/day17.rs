@@ -1,4 +1,4 @@
-use std::{collections::{VecDeque, HashMap, hash_map::DefaultHasher}, vec, hash::Hash};
+use std::{collections::VecDeque, vec, time::Instant};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 enum Movement {
@@ -26,142 +26,6 @@ fn parse_movements(input: &str) -> VecDeque<Movement> {
     }
     movements
 }
-
-/* 
-fn sim_flat(heights: &mut Vec<u32>, movements: &mut VecDeque<Movement>) {
-    let mut height = heights.iter().max().unwrap() + 4; // If start at floor, start 3 above, so +4
-    let mut hori = 2;
-    while {
-        let mut has_stopped = false;
-        for idx in hori..(hori + 4) {
-            if heights[idx] == height {
-                has_stopped = true;
-            }
-        }
-        !has_stopped
-    } {
-        let movement = movements.pop_front().unwrap();   
-    
-        let end = hori + 3;
-        {
-            match movement {
-                Movement::Left => {
-                    if hori != 0 && heights[hori - 1] != height {
-                        hori -= 1;
-                    }
-                },
-                Movement::Right => {
-                    if end != 6 && heights[hori + 1] != height {
-                        hori += 1;
-                    }
-                },
-            }
-        }
-        movements.push_back(movement);
-        height -= 1;
-    }
-    for idx in hori..(hori + 4) {
-        heights[idx] = height + 1 // Account for fall into floor
-    }
-
-}
-
-fn sim_cross(heights: &mut Vec<u32>, movements: &mut VecDeque<Movement>) {
-    let mut height = heights.iter().max().unwrap() + 4; // If start at floor, start 3 above, so +4
-    let mut hori = 2;
-    while {
-        let mut has_stopped = false;
-        has_stopped |= heights[hori] == height + 1;
-        has_stopped |= heights[hori + 1] == height;
-        has_stopped |= heights[hori + 2] == height + 1;
-        !has_stopped
-    } {
-        let movement = movements.pop_front().unwrap();   
-    
-        let end = hori + 3;
-        move_rock(&mut hori, end, movement);
-        movements.push_back(movement);
-        height -= 1;
-    }
-    for idx in hori..(hori + 4) {
-        heights[idx] = height + 1 // Account for fall into floor
-    }
-}
-
-fn sim_l(heights: &mut Vec<u32>, movements: &mut VecDeque<Movement>) {
-    let mut height = heights.iter().max().unwrap() + 4; // If start at floor, start 3 above, so +4
-    let mut hori = 2;
-    // Collision is bascially the same as flat
-    while {
-        let mut has_stopped = false;
-        for idx in hori..(hori + 2) {
-            if heights[idx] == height {
-                has_stopped = true;
-            }
-        }
-        !has_stopped
-    } {
-        let movement = movements.pop_front().unwrap();   
-    
-        let end = hori + 2;
-        move_rock(&mut hori, end, movement);
-        movements.push_back(movement);
-        height -= 1;
-    }
-    for idx in hori..(hori +2) {
-        heights[idx] = height + 1 // Account for fall into floor
-    }
-    heights[hori + 3] = height + 4; // Account for L part.
-}
-
-fn sim_line(heights: &mut Vec<u32>, movements: &mut VecDeque<Movement>) {
-    let mut height = heights.iter().max().unwrap() + 4; // If start at floor, start 3 above, so +4
-    let mut hori = 2;
-    while heights[hori] != height {
-        let movement = movements.pop_front().unwrap();   
-    
-        let end = hori;
-        move_rock(&mut hori, end, movement);
-        movements.push_back(movement);
-        height -= 1;
-    }
-    heights[hori] = height + 4;
-}
-
-fn sim_square(heights: &mut Vec<u32>, movements: &mut VecDeque<Movement>) {
-    let mut height = heights.iter().max().unwrap() + 4; // If start at floor, start 3 above, so +4
-    let mut hori = 2;
-    while {
-        let mut has_stopped = false;
-        for idx in hori..(hori + 2) {
-            if heights[idx] == height {
-                has_stopped = true;
-            }
-        }
-        !has_stopped
-    } {
-        let movement = movements.pop_front().unwrap();   
-    
-        let end = hori + 1;
-        move_rock(&mut hori, end, movement);
-        movements.push_back(movement);
-        height -= 1;
-    }
-    for idx in hori..(hori + 2) {
-        heights[idx] = height + 2 // Account for fall into floor
-    }
-}
-
-fn sim_rock(rock: Rock, heights: &mut Vec<u32>, movements: &mut VecDeque<Movement>) {
-    match rock {
-        Rock::Flat => sim_flat(heights, movements),
-        Rock::Cross => sim_cross(heights, movements),
-        Rock::L => sim_l(heights, movements),
-        Rock::Line => sim_line(heights, movements),
-        Rock::Square => sim_square(heights, movements),
-    }
-}
-*/
 
 fn sim_movements(lines: &mut Vec<Vec<&str>>, movement: Movement) -> bool {
     // First, check if we can make the move 
@@ -362,7 +226,7 @@ fn spawn_rock(lines: &mut Vec<Vec<&str>>, rock: Rock) {
     }
 }
 
-fn print_lines(lines: &mut Vec<Vec<&str>>) {
+fn _print_lines(lines: &mut Vec<Vec<&str>>) {
     for idx in (0..lines[0].len()).rev() {
         for line in &*lines {
             print!("{}", line[idx]);
@@ -371,7 +235,7 @@ fn print_lines(lines: &mut Vec<Vec<&str>>) {
     }
 }
 
-fn print_lines_with_limit(lines: &mut Vec<Vec<&str>>, limit: usize) {
+fn _print_lines_with_limit(lines: &mut Vec<Vec<&str>>, limit: usize) {
     let cap = lines[0].len() - 1;
     for idx in 0..limit.min(cap + 1) {
         for line in &*lines {
@@ -395,18 +259,10 @@ fn clear_lines(lines: &mut Vec<Vec<&str>>) -> Option<usize> {
         }
     }
     if let Some(empty_idx) = empty_idx {
-        //println!("-----------------------------");
-        //print_lines_with_limit(lines, lines[0].len() - empty_idx);
-        //println!("|||||||||||||||||||||||||||||");
-
         for line_idx in 0..lines.len() {
             let new_line = lines[line_idx].split_off(empty_idx); 
             lines[line_idx] = new_line;
         }
-            
-        //print_lines_with_limit(lines, empty_idx);
-        //print_lines(lines);
-        //println!("-----------------------------");
     }
 
     empty_idx
@@ -456,7 +312,7 @@ pub fn part1(input: &str) {
     println!("{}", lines.iter().map(|v| v.len()).max().unwrap());
 }
 
-const P2_NUM_LINES: i128 = 1000000000000; // 1000000000000
+const P2_NUM_LINES: i128 = 1000000000000;
 
 fn detect_cycle(cache: &Vec<(i128, usize, usize, u128)>) -> Option<(u128, usize)> {
     let start = cache.last()?;
@@ -512,14 +368,6 @@ pub fn part2(input: &str) {
 
 
     while fallen < P2_NUM_LINES {
-        //println!("{}", fallen);
-        //for line in &lines {
-        //    println!("{:?}", line);
-        //}
-        //println!("---------------------");  
-
-        //print_lines_with_limit(&mut lines, 10);
-        //println!("---------------------");
         let movement = movements[movement_idx];
         let res = sim_movements(&mut lines, movement);
         movement_idx += 1;
@@ -545,8 +393,6 @@ pub fn part2(input: &str) {
         if res {
             fallen += 1;
             if rock_idx == 0 {
-                //println!("{}, {}, {}, {}", fallen, rock_idx, movement_idx, 
-                //lines.iter().map(|v| v.len()).max().unwrap() as u128 + cleared_lines);
                 cache.push((fallen, rock_idx, movement_idx, 
                     lines.iter().map(|v| v.len()).max().unwrap() as u128 + cleared_lines));
                 if let Some((fallen_in_cycle, rock_diff)) = detect_cycle(&cache) {
@@ -560,17 +406,11 @@ pub fn part2(input: &str) {
 
             // Don't create new rock if end
             if fallen >= P2_NUM_LINES {
-                //print_lines(&mut lines);
-                //print_lines_with_limit(&mut lines, 20);
                 break;
             }
 
             let rock = rocks[rock_idx];
-            //println!("{}", lines.iter().map(|v| v.len()).max().unwrap());
             spawn_rock(&mut lines, rock);
-            
-            //print_lines_with_limit(&mut lines, 20);
-            //println!("-----------------------------");
             rock_idx += 1;
             rock_idx %= rocks.len();
         }
@@ -581,6 +421,12 @@ pub fn part2(input: &str) {
 }
 
 pub fn day17(input: &str) {
+    let now = Instant::now();
     part1(input);
+    let after_p1 = Instant::now();
+    println!("Completed day 17 part 1 in {:?}", after_p1.duration_since(now));
+    let now = Instant::now();
     part2(input);
+    let after_p2 = Instant::now();
+    println!("Completed day 17 part 2 in {:?}", after_p2.duration_since(now));
 }

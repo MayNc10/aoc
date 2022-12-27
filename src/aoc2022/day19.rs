@@ -1,5 +1,8 @@
 use std::{ops::{Sub, Index}, cmp::Ordering, time::Instant};
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+use colored::Colorize;
+
+use itertools::Itertools;
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Hash)]
 struct Cost {
     pub num_ore: u8,    
     pub num_clay: u8,
@@ -62,7 +65,7 @@ impl Cost {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Debug, Hash, Copy)]
 struct Blueprint {
     ore_robot: Cost,
     clay_robot: Cost,
@@ -92,39 +95,25 @@ enum Robot {
     Geode,
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
-enum Action {
-    Waited,
-    Built(Robot),
-}
-
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Debug, Hash, Copy)]
 struct Simulation {
     pub blueprint: Blueprint,
     pub items: Cost,
     pub num_geodes: u32,
     pub production: [u8; 4],
     pub time: u8,
-    pub route: Vec<Action>,
+    //pub route: Vec<Action>,
     pub stage: Stage,
 }
 
 const P1_TIME_LIMIT: u8 = 24;
 const P2_TIME_LIMIT: u8 = 32;
 
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Hash)]
 enum Stage {
     Ore,
     Clay,
     Last,
-}
-
-fn _stage_to_robot(stage: Stage) -> Robot {
-    match stage {
-        Stage::Ore => Robot::Ore,
-        Stage::Clay => Robot::Clay,
-        Stage::Last => Robot::Obsidian,
-    }
 }
 
 fn robot_to_stage(rb: Robot) -> Stage {
@@ -135,15 +124,6 @@ fn robot_to_stage(rb: Robot) -> Stage {
     }
 }
 
-
-fn _next_stage(stage: Stage) -> Stage {
-    match stage {
-        Stage::Ore => Stage::Clay,
-        Stage::Clay => Stage::Last,
-        Stage::Last => unreachable!(),
-    }
-}
-
 impl Simulation {
     fn new(blueprint: Blueprint) -> Simulation {
         Simulation { blueprint, 
@@ -151,7 +131,7 @@ impl Simulation {
             num_geodes: 0, 
             production: [1, 0, 0, 0], 
             time: 1,
-            route: Vec::new(),
+            //route: Vec::new(),
             stage: Stage::Ore,
         }
     }
@@ -196,33 +176,6 @@ impl Simulation {
         self.num_geodes += self.production[3] as u32; 
     }
 
-    fn find_limits(&self, rb: Robot) -> Vec<Robot> {
-        let mut robots = vec![Robot::Ore, Robot::Clay, Robot::Obsidian, Robot::Geode];
-        robots = robots.into_iter().filter(|robot| (*robot as u8) < rb as u8).collect::<Vec<Robot>>();
-        robots = robots.into_iter().filter(|r| {
-            let idx = *r as u8;
-            self.blueprint[rb][idx] > self.production[idx as usize]
-        }).collect();
-
-        robots.sort_by(|r1, r2| {
-            let idx1 = *r1 as u8;
-            let idx2 = *r2 as u8;
-
-            if self.production[idx1 as usize] == 0 {
-                Ordering::Less
-            }
-            else if self.production[idx2 as usize] == 0 {
-                Ordering::Greater
-            }
-            else {
-                
-                let rate1 = self.blueprint[rb][idx1] / self.production[idx1 as usize];
-                let rate2 = self.blueprint[rb][idx2] / self.production[idx2 as usize];
-                rate2.cmp(&rate1)
-            }
-        });
-        robots
-    }
     fn find_ultimate_limits(&self) -> Vec<Robot> {
         let mut limits = Vec::new();
         if self.production[0] < self.blueprint[Robot::Geode].num_ore { limits.push(Robot::Ore); }
@@ -243,31 +196,6 @@ impl Simulation {
             }
         }
         limits
-    }
-
-    fn find_limit(&self, rb: Robot) -> Option<Robot> {
-        let robots = self.find_limits(rb);
-        if robots.len() == 0 { None }
-        else { Some(*robots.first().unwrap()) }
-    }
-  
-    fn _is_robot_needed(&self, rb: Robot) -> bool {
-        let robots = [Robot::Ore, Robot::Clay, Robot::Obsidian, Robot::Geode].iter();
-        let robots = robots.filter(|r| **r != rb);
-        for r in robots {
-            if self.blueprint[*r][rb as u8] > self.production[rb as u8 as usize] { return true; }
-        }
-        false
-    }
-
-    fn find_ultimate_limit(&self, rb: Robot) -> Option<Robot> {
-        let limit = self.find_limit(rb);
-        if limit.is_none() { return None; }
-        // See if we can make that robot
-        let limit = limit.unwrap();
-        if self.try_build_robot(limit).is_some() { Some(limit) }
-        else { self.find_ultimate_limit(limit) }
-
     }
 
     fn should_wait_to_buy(&self, rb: Robot) -> Option<u8> {
@@ -298,43 +226,46 @@ impl Simulation {
     fn find_best_limiting_reactant(&mut self, time_limit: u8) {
         if self.time == time_limit {
             self.mine();
-            self.route.push(Action::Waited);
+            //self.route.push(Action::Waited);
             return;
         }    
         if let Some((rb, left)) = self.try_build_robot(Robot::Geode) {
             self.items = left;
             self.mine();
             self.production[rb as u8 as usize] += 1;
-            self.route.push(Action::Built(Robot::Geode));
+            //self.route.push(Action::Built(Robot::Geode));
         }
         else {
             let robots_to_build = self.find_ultimate_limits();
-            let limit = self.find_ultimate_limit(Robot::Geode);
-            if limit.is_some() { assert!(robots_to_build.contains(&limit.unwrap())); }
+            //let limit = self.find_ultimate_limit(Robot::Geode);
+            //if limit.is_some() { assert!(robots_to_build.contains(&limit.unwrap())); }
 
             if robots_to_build.is_empty() {
                 self.mine();
-                self.route.push(Action::Waited);
+                //self.route.push(Action::Waited);
             } else {    
                 let mut sims = Vec::new();
                 for rb in &robots_to_build {
-                    if true {
-                        let mut clone = self.clone();
-                        if let Some((rb, left)) = clone.try_build_robot(*rb)
-                        {
-                            clone.items = left;
-                            clone.mine();
-                            clone.stage = robot_to_stage(rb);
-                            clone.production[rb as u8 as usize] += 1;
-                            clone.time += 1;
-                            clone.route.push(Action::Built(rb));
-                            clone.find_best_limiting_reactant(time_limit);
-                            sims.push(clone);
-                        }
+                    let mut clone = self.clone();
+                    if let Some((rb, left)) = clone.try_build_robot(*rb)
+                    {
+                        clone.items = left;
+                        clone.mine();
+                        clone.stage = robot_to_stage(rb);
+                        clone.production[rb as u8 as usize] += 1;
+                        clone.time += 1;
+                        //clone.route.push(Action::Built(rb));
+                        clone.find_best_limiting_reactant(time_limit);
+                        sims.push(clone);
                     }
                 }
 
-                let mut robots_to_check = robots_to_build;
+                let mut robots_to_check = robots_to_build.iter()
+                    .filter(|rb| {
+                        self.try_build_robot(**rb).is_none()
+                    })
+                    .map(|rb| *rb)
+                    .collect_vec();
                 robots_to_check.push(Robot::Geode);
                 
                 let mut should_pause = None;
@@ -354,7 +285,7 @@ impl Simulation {
 
                 if (should_pause.is_some() && should_pause.unwrap() < (time_limit - self.time)) || sims.is_empty() {
                     self.mine();
-                    self.route.push(Action::Waited);
+                    //self.route.push(Action::Waited);
                     self.time += 1;
                     self.find_best_limiting_reactant(time_limit);
                 }
@@ -459,12 +390,13 @@ pub fn part2(input: &str) {
 }
 
 pub fn day19(input: &str) { 
+    println!("{}", "Day 19:".green());
     let now = Instant::now();
     part1(input);
     let after_p1 = Instant::now();
-    println!("Completed day 19 part 1 in {:?}", after_p1.duration_since(now));
-    let now = Instant::now();
+    let now_p1 = Instant::now();
     part2(input);
     let after_p2 = Instant::now();
-    println!("Completed day 19 part 2 in {:?}", after_p2.duration_since(now));
+    println!("Part 1 in {}", format!("{:?}", after_p1.duration_since(now)).green());
+    println!("Part 2 in {}", format!("{:?}", after_p2.duration_since(now_p1)).green());
 }

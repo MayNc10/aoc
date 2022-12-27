@@ -1,5 +1,5 @@
 use std::time::Instant;
-
+use colored::Colorize;
 struct Monkey {
     pub items: Vec<u128>,
     pub change: Box<dyn Fn(&mut u128)>,
@@ -140,12 +140,13 @@ pub fn part2(input: &str) {
 }
 
 pub fn day11(input: &str) {
+    println!("{}", "Day 11:".green());
     let now = Instant::now();
     part1(input);
     let after_p1 = Instant::now();
-    println!("Completed day 11 part 1 in {:?}", after_p1.duration_since(now));
-    let now = Instant::now();
+    let now_p1 = Instant::now();
     part2(input);
     let after_p2 = Instant::now();
-    println!("Completed day 11 part 2 in {:?}", after_p2.duration_since(now));
+    println!("Part 1 in {}", format!("{:?}", after_p1.duration_since(now)).green());
+    println!("Part 2 in {}", format!("{:?}", after_p2.duration_since(now_p1)).green());
 }

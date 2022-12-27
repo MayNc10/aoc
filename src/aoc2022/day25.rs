@@ -1,3 +1,5 @@
+use colored::Colorize;
+
 // ty StackOverflow!
 use std::{char::from_digit, time::Instant};
 fn encode(mut n: u128, r: u128) -> Option<String> {
@@ -88,8 +90,9 @@ pub fn part1(input: &str) {
 }
 
 pub fn day25(input: &str) {
+    println!("{}", "Day 25:".green());
     let now = Instant::now();
     part1(input);
     let after_p1 = Instant::now();
-    println!("Completed day 25 part 1 in {:?}", after_p1.duration_since(now));
+    println!("Part 1 in {}", format!("{:?}", after_p1.duration_since(now)).green());
 }

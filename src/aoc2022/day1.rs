@@ -1,5 +1,6 @@
 use crate::utils::*;
 use std::time::Instant;
+use colored::Colorize;
 
 pub fn part1(input: &str) {
     let mut cals = split_by_big_gap(input);
@@ -34,12 +35,13 @@ pub fn part2(input: &str) {
 }
 
 pub fn day1(input: &str) {
+    println!("{}", "Day 1:".green());
     let now = Instant::now();
     part1(input);
     let after_p1 = Instant::now();
-    println!("Completed day 1 part 1 in {:?}", after_p1.duration_since(now));
-    let now = Instant::now();
+    let now_p1 = Instant::now();
     part2(input);
     let after_p2 = Instant::now();
-    println!("Completed day 1 part 2 in {:?}", after_p2.duration_since(now));
+    println!("Part 1 in {}", format!("{:?}", after_p1.duration_since(now)).green());
+    println!("Part 2 in {}", format!("{:?}", after_p2.duration_since(now_p1)).green());
 }

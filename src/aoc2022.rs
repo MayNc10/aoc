@@ -1,4 +1,6 @@
-use std::fs;
+use std::{fs, time::Instant};
+
+use colored::Colorize;
 
 pub mod day1;
 pub mod day2;
@@ -26,9 +28,8 @@ pub mod day23;
 pub mod day24; 
 pub mod day25; 
 
-
-
 pub fn main() { 
+    let start = Instant::now();
     day1::day1(fs::read_to_string("./inputs/2022/day1.txt").unwrap().as_str());
     day2::day2(fs::read_to_string("./inputs/2022/day2.txt").unwrap().as_str());
     day3::day3(fs::read_to_string("./inputs/2022/day3.txt").unwrap().as_str());
@@ -54,4 +55,5 @@ pub fn main() {
     day23::day23(fs::read_to_string("./inputs/2022/day23.txt").unwrap().as_str());
     day24::day24(fs::read_to_string("./inputs/2022/day24.txt").unwrap().as_str());
     day25::day25(fs::read_to_string("./inputs/2022/day25.txt").unwrap().as_str());
+    println!("Total time: {}", format!("{:?}", Instant::now().duration_since(start)).green());
 }
